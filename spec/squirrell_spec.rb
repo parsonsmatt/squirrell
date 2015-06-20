@@ -5,7 +5,7 @@ describe Squirrell do
     expect(Squirrell::VERSION).not_to be nil
   end
 
-  let(:good_executor) { Struct.new(:execute).new(-> (x) { x }) }
+  let(:good_executor) { -> (x) { x }  }
 
   describe '.configure' do
     let(:good) { good_executor }
@@ -93,8 +93,7 @@ describe Squirrell do
       end
 
       it 'knows to call raw_sql' do
-        SqlExample.find(thing: 123)
-        puts Squirrell.what
+        expect(SqlExample.find(thing: 123)).to eq("SELECT * FROM 123")
       end
     end
   end

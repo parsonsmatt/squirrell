@@ -6,7 +6,7 @@ module Squirrell
     attr_reader :executor
 
     def executor=(e)
-      fail ExecutorError, "Executor must respond to `#execute`" unless e.respond_to? :execute
+      fail ExecutorError, "Executor must respond to `#call`" unless e.respond_to? :call
       @executor = e
     end
   end
@@ -55,11 +55,7 @@ module Squirrell
       else 
         sql = object.raw_sql || object.arel.to_sql
         puts Squirrell.executor
-        object.process(
-          Squirrell.executor(
-            sql
-          )
-        )
+        object.process(Squirrell.executor.call(sql))
       end
     end
   end
