@@ -60,7 +60,8 @@ HeroByName.find(name: "Finn")
 
 There are currently three queries supported by Squirrell: `#finder`, `#arel`, and `#raw_sql`.
 
-Finders are the simplest. They just return the result of the `#finder` method.
+Finders are the simplest.
+They just return the result of the `#finder` method.
 
 ```ruby
 class UserFinder
@@ -71,12 +72,20 @@ class UserFinder
   def finder
     User.find(@id)
   end
+
+  def process(result)
+    result.map { |user| "Happy birthday, #{user.name}!" }
+  end
 end
 ```
 
 The `requires :id` line indicates what parameters must be passed to `find`.
 An error will be raised if a required parameter is missing or if an extra parameter is passed.
 The symbols in the hash are made into instance variables of the same name.
+
+After the finding method gets called, `#process` gets called with the result of the query.
+In the previous example, `result` would be an array, and it would convert the found users into a string wishing them a happy birthday.
+The return value of `process` is ultimately what the return value of `UserFinder.find` will be.
 
 Arel finders are meant to be used in conjunction with the Arel gem.
 In truth, the only requirement is that the return value of the `#arel` method respond to `:to_sql`.
@@ -91,6 +100,7 @@ class WizardByElementAndPet
     wizards = Wizard.arel_table
     wizards.where(wizards[:pet].eq(@pet))
            .where(wizards[:element].eq(@element))
+           .project(wizards[:id])
   end
 end
 ```
