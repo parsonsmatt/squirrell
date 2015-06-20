@@ -8,4 +8,12 @@ describe Squirrell do
   it 'does something useful' do
     expect(false).to eq(true)
   end
+
+  it 'can be configured' do
+    Squirrell.configure do |config|
+      config.executor = "lol"
+    end
+
+    expect(Squirrell.executor).to eq("lol")
+  end
 end
