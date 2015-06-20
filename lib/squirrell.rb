@@ -1,4 +1,4 @@
-require "squirrell/version"
+require 'squirrell/version'
 
 module Squirrell
   class << self
@@ -6,7 +6,9 @@ module Squirrell
     attr_reader :executor
 
     def executor=(e)
-      fail ExecutorError, "Executor must respond to `#call`" unless e.respond_to? :call
+      unless e.respond_to? :call
+        fail ExecutorError, 'Executor must respond to `#call`'
+      end
       @executor = e
     end
   end
@@ -23,7 +25,7 @@ module Squirrell
     results
   end
 
-  class ExecutorError < ArgumentError; end;
+  class ExecutorError < ArgumentError; end
 
   def self.included(klass)
     def klass.required(*args)
@@ -42,17 +44,13 @@ module Squirrell
     end
 
     def klass.find(args = {})
-      do_query(
-        new(
-          args
-        )
-      )
+      do_query(new(args))
     end
 
     def klass.do_query(object)
       if object.respond_to? :finder
-        object.finder
-      else 
+        object.process(object.finder)
+      else
         sql = object.raw_sql || object.arel.to_sql
         puts Squirrell.executor
         object.process(Squirrell.executor.call(sql))

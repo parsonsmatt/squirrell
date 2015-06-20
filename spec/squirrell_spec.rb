@@ -9,7 +9,7 @@ describe Squirrell do
 
   describe '.configure' do
     let(:good) { good_executor }
-    let(:bad) { "asdf" }
+    let(:bad) { 'asdf' }
 
     it 'succeeds when executor responds to execute' do
       expect do
@@ -48,8 +48,8 @@ describe Squirrell do
         end
 
         it 'does not permit non-required values' do
-          expect do 
-            FinderExample.find(id: 5, lol: 2) 
+          expect do
+            FinderExample.find(id: 5, lol: 2)
           end.to raise_error ArgumentError
         end
 
@@ -77,7 +77,6 @@ describe Squirrell do
       end
 
       it 'expects result of arel to respond to to_sql' do
-
       end
     end
 
@@ -93,7 +92,7 @@ describe Squirrell do
       end
 
       it 'knows to call raw_sql' do
-        expect(SqlExample.find(thing: 123)).to eq("SELECT * FROM 123")
+        expect(SqlExample.find(thing: 123)).to eq('SELECT * FROM 123')
       end
     end
   end

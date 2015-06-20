@@ -1,4 +1,4 @@
-# Example usage for Squirrell: 
+# Example usage for Squirrell:
 
 # Configuration:
 
@@ -6,7 +6,7 @@ Squirrell.configure do |config|
   config.executor = ActiveRecord::Base
 end
 
-# Basic AR finders: 
+# Basic AR finders:
 
 class UserWithPosts
   include Squirrell
