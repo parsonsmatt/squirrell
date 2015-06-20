@@ -1,8 +1,11 @@
 # Squirrell
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/squirrell`. To experiment with that code, run `bin/console` for an interactive prompt.
+Squirrell is a completely non-magical library intended to make it easier to simplify your relationship with ActiveRecord.
+ActiveRecord provides an immense amount of flexibility and power, and it's really easy to let this functionality become more-and-more intense.
+Controllers doing arbitrary `where`s, other models doing a `find_by`, maybe even a hidden finder in the views somewhere.
+This level of decoupling makes things difficult to test and obscures the lines in your application.
 
-TODO: Delete this and the text above, and describe your gem
+Squirrell makes it easy to create finders and query objects that respond very well to testing and are easy to mock.
 
 ## Installation
 
@@ -22,7 +25,6 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
 
 ## Development
 
