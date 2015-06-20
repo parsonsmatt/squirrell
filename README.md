@@ -142,6 +142,12 @@ HeroByName.find(name: "Finn")
 # => [#<Hero:0x0987123 @name="Finn" @weapon="Grass Sword", etc...]
 ```
 
+## Wishlist
+
+1. Rails generators/installers/initializers
+2. Typed parameters: `requires id: :integer, name: :string`
+3. Optional parameters: `permits :email`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
