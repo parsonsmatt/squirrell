@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Matt Parsons']
   spec.email         = ['parsonsmatt@gmail.com']
 
-
   spec.summary       = 'A kinda magical gem for query objects'
   spec.homepage      = 'https://www.github.com/parsonsmatt/squirrell'
   spec.license       = 'MIT'

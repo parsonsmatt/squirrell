@@ -50,13 +50,13 @@ describe Squirrell do
         it 'does not permit non-requires, non-permitted values' do
           expect do
             FinderExample.find(id: 5, lol: 2)
-          end.to raise_error ArgumentError
+          end.to raise_error Squirrell::UnusedParameter
         end
 
         it 'fails if requires value blank' do
           expect do
             FinderExample.find(lol: 2)
-          end.to raise_error ArgumentError
+          end.to raise_error Squirrell::MissingParameterError
         end
       end
 

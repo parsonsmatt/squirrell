@@ -1,5 +1,8 @@
 require 'squirrell/version'
+require 'squirrell/class_methods'
+require 'squirrell/instance_methods'
 
+# Including this module gives a few convenience methods for query objects.
 module Squirrell
   class << self
     attr_accessor :requires
@@ -18,18 +21,18 @@ module Squirrell
     yield self
   end
 
-  def raw_sql
-    sql = arel
-    fail InvalidArelError unless sql.respond_to? :to_sql
-    sql.to_sql
-  end
-
-  def process(results)
-    results
-  end
-
+  # Errors raised when the executor doesn't respond to call.
   class ExecutorError < ArgumentError; end
+
+  # Error raised when result of `arel` doesn't respond to `to_sql`
   class InvalidArelError < ArgumentError; end
+
+  # Error raised when a required parameter is not passed.
+  class MissingParameterError < ArgumentError; end
+
+  # Error raised when a parameter passed into `.find` is not included in either
+  # requires or permits.
+  class UnusedParameter < ArgumentError; end
 
   def self.included(klass)
     Squirrell.requires ||= {}
@@ -37,42 +40,7 @@ module Squirrell
     Squirrell.permits ||= {}
     Squirrell.permits[klass] = []
 
-    def klass.requires(*args)
-      Squirrell.requires[self] = args
-    end
-
-    def klass.permits(*args)
-      Squirrell.permits[self] = args
-    end
-
-    def initialize(args)
-      Squirrell.requires[self.class].each do |k|
-        unless args.keys.include? k
-          fail ArgumentError, "Missing required parameter: #{k}"
-        end
-        instance_variable_set "@#{k}", args.delete(k)
-      end
-
-      Squirrell.permits[self.class].each do |k|
-        instance_variable_set "@#{k}", args.delete(k) if args.keys.include? k
-      end
-
-      fail ArgumentError if args.any?
-    end
-
-    def klass.find(args = {})
-      do_query(new(args))
-    end
-
-    def klass.do_query(object)
-      result = nil
-      if object.respond_to? :finder
-        result = object.finder
-      else
-        sql = object.raw_sql
-        result = Squirrell.executor.call(sql)
-      end
-      object.process(result)
-    end
+    klass.extend ClassMethods
+    klass.include InstanceMethods
   end
 end
