@@ -16,14 +16,9 @@ module Squirrell
     private
 
     def do_query(object)
-      result = nil
-      if object.finder
-        result = object.finder
-      else
-        sql = object.raw_sql
-        result = Squirrell.executor.call(sql)
-      end
+      result = object.finder || Squirrell.executor.call(object.raw_sql)
       object.process(result)
     end
   end
 end
+
