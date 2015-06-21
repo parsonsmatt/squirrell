@@ -15,13 +15,11 @@ Add this line to your application's Gemfile:
 gem 'squirrell'
 ```
 
-And then execute:
+### Rails
 
-    $ bundle
+Run the install generator to copy the initializer, add `app/queries` to Rails autoload, and provide an example query:
 
-Or install it yourself as:
-
-    $ gem install squirrell
+    $ rails generate sqrl:install
 
 ## Usage
 
@@ -142,9 +140,15 @@ HeroByName.find(name: "Finn")
 # => [#<Hero:0x0987123 @name="Finn" @weapon="Grass Sword", etc...]
 ```
 
-## Wishlist
+### Rails Generator
 
-1. Optional parameters: `permits :email`
+Squirrell has a generator for queries.
+
+    $ rails generate sqrl:query QueryName --type=raw_sql id name
+
+* `QueryName` is the name of the query object.
+* `--type=` can either be `raw_sql`, `finder`, or `arel`.
+* The remaining elements are the required parameters for the query.
 
 ## Development
 
