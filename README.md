@@ -140,6 +140,32 @@ HeroByName.find(name: "Finn")
 # => [#<Hero:0x0987123 @name="Finn" @weapon="Grass Sword", etc...]
 ```
 
+Squirrell allows you to define optional permitted parameters:
+
+```ruby
+def PermissionExample
+  include Squirrell
+
+  requires :user_id
+  permits :post_id
+
+  def raw_sql
+    <<SQL
+SELECT *
+FROM users
+  INNER JOIN posts ON users.id = posts.user_id
+WHERE users.id = #{@user_id} #{has_post?}
+SQL
+  end
+
+  def has_post?
+    @post_id ? "AND posts.id = #{@post_id}" : ""
+  end
+end
+```
+
+Generally, this makes for more complex queries. If you're finding that you're customizing with a bunch of `permits`, you may want to make a new query object.
+
 ### Rails Generator
 
 Squirrell has a generator for queries.
