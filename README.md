@@ -32,11 +32,11 @@ An executor responds to `:call`, accepts a single argument, and executes that ar
 It doesn't really have to execute a SQL query, though.
 It just probably should.
 
-To configure Squirrell, you can do a block:
+To configure Squirrell, you can do a block in an initializer somewhere:
 
 ```ruby
-Squirrell.configure do |sqrrll|
-  sqrrll.executor = -> (sql) { ActiveRecord::Base.connection.execute(sql) }
+Squirrell.configure do |sqrl|
+  sqrl.executor = -> (sql) { ActiveRecord::Base.connection.execute(sql) }
 end
 ```
 
