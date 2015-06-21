@@ -1,3 +1,5 @@
+require 'rails/generators'
+
 module Squirrell
   module Generators
     class InstallGenerator < Rails::Generator::Base
