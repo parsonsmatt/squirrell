@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/squirrell.svg)](http://badge.fury.io/rb/squirrell)
 
-Squirrell is a completely non-magical library intended to make it easier to simplify your relationship with ActiveRecord.
+Squirrell is a kinda magical library intended to make it easier to simplify your relationship with ActiveRecord.
 ActiveRecord provides an immense amount of flexibility and power, and it's really easy to let this functionality become more-and-more intense.
 Controllers doing arbitrary `where`s, other models doing a `find_by`, maybe even a hidden finder in the views somewhere.
 This level of decoupling makes things difficult to test and obscures the lines in your application.
