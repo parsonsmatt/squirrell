@@ -47,7 +47,7 @@ describe Squirrell do
           expect(FinderExample.find(id: 5)).to eq(5)
         end
 
-        it 'does not permit non-required values' do
+        it 'does not permit non-required, non-permitted values' do
           expect do
             FinderExample.find(id: 5, lol: 2)
           end.to raise_error ArgumentError
@@ -59,6 +59,34 @@ describe Squirrell do
           end.to raise_error ArgumentError
         end
       end
+    end
+
+    context 'with permitted parameters' do
+      class PermittedExample
+        include Squirrell
+
+        required :id
+        permits :name
+
+        def finder
+          @name ? @id + @name : @id
+        end
+      end
+
+      it 'sets permitted values' do
+        expect(PermittedExample.find(id: "5", name: "hey")).to eq("5hey")
+      end
+
+      it 'allows missing permitted values' do
+        expect(PermittedExample.find(id: 123)).to eq(123)
+      end
+
+      it 'errors on unspecified values' do
+        expect do
+          PermittedExample.find(id: 1, name: 2, face: "wut")
+        end.to raise_error ArgumentError
+      end
+      
     end
 
     context 'ex has good arel' do

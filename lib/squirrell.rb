@@ -2,7 +2,8 @@ require 'squirrell/version'
 
 module Squirrell
   class << self
-    attr_accessor :classes
+    attr_accessor :requires
+    attr_accessor :permits
     attr_reader :executor
 
     def executor=(e)
@@ -31,19 +32,37 @@ module Squirrell
   class InvalidArelError < ArgumentError; end
 
   def self.included(klass)
+    Squirrell.requires ||= {}
+    Squirrell.requires[klass] = []
+    Squirrell.permits ||= {}
+    Squirrell.permits[klass] = []
+
+
+    puts Squirrell.permits
+
     def klass.required(*args)
-      Squirrell.classes ||= {}
-      Squirrell.classes[self] = args
+      Squirrell.requires[self] = args
+    end
+
+    def klass.permits(*args)
+      Squirrell.permits[self] = args
     end
 
     def initialize(args)
-      args.each do |k, v|
-        if Squirrell.classes[self.class].include? k
-          instance_variable_set "@#{k}", v
-        else
-          fail ArgumentError, "required params incorrect: #{args}"
+      Squirrell.requires[self.class].each do |k|
+        unless args.keys.include? k
+          fail ArgumentError, "Missing required parameter: #{k}"
+        end
+        instance_variable_set "@#{k}", args.delete(k)
+      end
+
+      Squirrell.permits[self.class].each do |k|
+        if args.keys.include? k
+          instance_variable_set "@#{k}", args.delete(k)
         end
       end
+
+      raise ArgumentError if args.any?
     end
 
     def klass.find(args = {})
