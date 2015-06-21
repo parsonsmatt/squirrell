@@ -2,7 +2,7 @@ require 'rails/generators'
 
 module Squirrell
   module Generators
-    class InstallGenerator < Rails::Generator::Base
+    class InstallGenerator < ::Rails::Generator::Base
       source_root File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
 
       desc "Creates Squirrell initializer"
