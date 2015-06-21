@@ -3,7 +3,7 @@
 
 ## Uncomment and set this to only include directories you want to watch
 directories %w(. lib spec)
- .select{ |d| Dir.exists?(d) ? d : UI.warning("Directory #{d} does not exist") }
+  .select { |d| Dir.exist?(d) ? d : UI.warning("Directory #{d} does not exist") }
 
 ## Note: if you are using the `directories` clause above and you are not
 ## watching the project directory ('.'), then you will want to move
@@ -24,8 +24,8 @@ directories %w(. lib spec)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
 
-guard :rspec, cmd: "bundle exec rspec" do
-  require "guard/rspec/dsl"
+guard :rspec, cmd: 'bundle exec rspec' do
+  require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
 
   # Feel free to open issues for suggestions and improvements

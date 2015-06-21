@@ -15,13 +15,11 @@ Add this line to your application's Gemfile:
 gem 'squirrell'
 ```
 
-And then execute:
+### Rails
 
-    $ bundle
+Run the install generator to copy the initializer, add `app/queries` to Rails autoload, and provide an example query:
 
-Or install it yourself as:
-
-    $ gem install squirrell
+    $ rails generate sqrl:install
 
 ## Usage
 
@@ -60,7 +58,8 @@ HeroByName.find(name: "Finn")
 
 There are currently three queries supported by Squirrell: `#finder`, `#arel`, and `#raw_sql`.
 
-Finders are the simplest. They just return the result of the `#finder` method.
+Finders are the simplest.
+They just return the result of the `#finder` method.
 
 ```ruby
 class UserFinder
@@ -71,12 +70,20 @@ class UserFinder
   def finder
     User.find(@id)
   end
+
+  def process(result)
+    result.map { |user| "Happy birthday, #{user.name}!" }
+  end
 end
 ```
 
 The `requires :id` line indicates what parameters must be passed to `find`.
 An error will be raised if a required parameter is missing or if an extra parameter is passed.
 The symbols in the hash are made into instance variables of the same name.
+
+After the finding method gets called, `#process` gets called with the result of the query.
+In the previous example, `result` would be an array, and it would convert the found users into a string wishing them a happy birthday.
+The return value of `process` is ultimately what the return value of `UserFinder.find` will be.
 
 Arel finders are meant to be used in conjunction with the Arel gem.
 In truth, the only requirement is that the return value of the `#arel` method respond to `:to_sql`.
@@ -91,6 +98,7 @@ class WizardByElementAndPet
     wizards = Wizard.arel_table
     wizards.where(wizards[:pet].eq(@pet))
            .where(wizards[:element].eq(@element))
+           .project(wizards[:id])
   end
 end
 ```
@@ -131,6 +139,42 @@ end
 HeroByName.find(name: "Finn")
 # => [#<Hero:0x0987123 @name="Finn" @weapon="Grass Sword", etc...]
 ```
+
+Squirrell allows you to define optional permitted parameters:
+
+```ruby
+def PermissionExample
+  include Squirrell
+
+  requires :user_id
+  permits :post_id
+
+  def raw_sql
+    <<SQL
+SELECT *
+FROM users
+  INNER JOIN posts ON users.id = posts.user_id
+WHERE users.id = #{@user_id} #{has_post?}
+SQL
+  end
+
+  def has_post?
+    @post_id ? "AND posts.id = #{@post_id}" : ""
+  end
+end
+```
+
+Generally, this makes for more complex queries. If you're finding that you're customizing with a bunch of `permits`, you may want to make a new query object.
+
+### Rails Generator
+
+Squirrell has a generator for queries.
+
+    $ rails generate sqrl:query QueryName --type=raw_sql id name
+
+* `QueryName` is the name of the query object.
+* `--type=` can either be `raw_sql`, `finder`, or `arel`.
+* The remaining elements are the required parameters for the query.
 
 ## Development
 
