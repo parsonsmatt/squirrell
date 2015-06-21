@@ -16,7 +16,7 @@ describe Squirrell do
         Squirrell.configure do |c|
           c.executor = good
         end
-      end.to_not raise_error Squirrell::ExecutorError
+      end.to_not raise_error
     end
 
     it 'errors when executor does not respond to execute' do
@@ -61,7 +61,7 @@ describe Squirrell do
       end
     end
 
-    context 'ex has arel' do
+    context 'ex has good arel' do
       class ArelExample
         include Squirrell
 
@@ -76,7 +76,28 @@ describe Squirrell do
         expect(ArelExample.find(lol: 5, wat: 6)).to eq(5)
       end
 
-      it 'expects result of arel to respond to to_sql' do
+      it 'calls the executor' do
+        expect(Squirrell.executor).to receive(:call).and_call_original
+        ArelExample.find(lol: 2, wat: 8)
+      end
+    end
+
+    context 'with bad arel' do
+      class BadArelExample
+        include Squirrell
+
+        required :lol, :wat
+
+        def arel
+          @lol
+        end
+      end
+
+      it 'should raise error' do
+        
+        expect {
+          BadArelExample.find(lol: 'asdf', wat: 'tho')
+        }.to raise_error Squirrell::InvalidArelError
       end
     end
 
@@ -93,6 +114,11 @@ describe Squirrell do
 
       it 'knows to call raw_sql' do
         expect(SqlExample.find(thing: 123)).to eq('SELECT * FROM 123')
+      end
+
+      it 'calls the executor' do
+        expect(Squirrell.executor).to receive(:call).and_call_original
+        SqlExample.find(thing: "asdf")
       end
     end
   end

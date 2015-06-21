@@ -18,7 +18,9 @@ module Squirrell
   end
 
   def raw_sql
-    nil
+    sql = arel
+    fail InvalidArelError unless sql.respond_to? :to_sql
+    sql.to_sql
   end
 
   def process(results)
@@ -26,6 +28,7 @@ module Squirrell
   end
 
   class ExecutorError < ArgumentError; end
+  class InvalidArelError < ArgumentError; end
 
   def self.included(klass)
     def klass.required(*args)
@@ -48,13 +51,14 @@ module Squirrell
     end
 
     def klass.do_query(object)
+      result = nil
       if object.respond_to? :finder
-        object.process(object.finder)
+        result = object.finder
       else
-        sql = object.raw_sql || object.arel.to_sql
-        puts Squirrell.executor
-        object.process(Squirrell.executor.call(sql))
+        sql = object.raw_sql
+        result = Squirrell.executor.call(sql)
       end
+      object.process(result)
     end
   end
 end
