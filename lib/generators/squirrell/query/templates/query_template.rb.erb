@@ -1,0 +1,9 @@
+class <%= class_name %>
+  include Squirrell
+
+  requires <%= requires.map { |s| ":#{s}" }.join(', ') %>
+  
+  def <%= query_type %>
+
+  end
+end

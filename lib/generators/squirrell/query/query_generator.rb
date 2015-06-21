@@ -5,12 +5,12 @@ module Squirrell
     class QueryGenerator < ::Rails::Generators::NamedBase
       source_root File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
 
-      argument :query_name, type: :string, desc: "Name of the query"
       argument :query_type, type: :string, default: "finder", desc: "finder/raw_sql/arel"
+      argument :requires, type: :array, default: ["id"], desc: "Required parameters"
 
       desc "Creates a query"
       def create_query
-        puts "#{query_name} and also #{ }"
+        puts "#{name} and also #{query_type} and maybe #{requires}"
       end
     end
   end
