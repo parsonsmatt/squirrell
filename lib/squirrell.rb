@@ -37,10 +37,7 @@ module Squirrell
     Squirrell.permits ||= {}
     Squirrell.permits[klass] = []
 
-
-    puts Squirrell.permits
-
-    def klass.required(*args)
+    def klass.requires(*args)
       Squirrell.requires[self] = args
     end
 

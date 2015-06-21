@@ -35,25 +35,25 @@ describe Squirrell do
       class FinderExample
         include Squirrell
 
-        required :id
+        requires :id
 
         def finder
           @id
         end
       end
 
-      describe 'required' do
+      describe 'requires' do
         it 'makes an instance variable' do
           expect(FinderExample.find(id: 5)).to eq(5)
         end
 
-        it 'does not permit non-required, non-permitted values' do
+        it 'does not permit non-requires, non-permitted values' do
           expect do
             FinderExample.find(id: 5, lol: 2)
           end.to raise_error ArgumentError
         end
 
-        it 'fails if required value blank' do
+        it 'fails if requires value blank' do
           expect do
             FinderExample.find(lol: 2)
           end.to raise_error ArgumentError
@@ -65,7 +65,7 @@ describe Squirrell do
       class PermittedExample
         include Squirrell
 
-        required :id
+        requires :id
         permits :name
 
         def finder
@@ -93,7 +93,7 @@ describe Squirrell do
       class ArelExample
         include Squirrell
 
-        required :lol, :wat
+        requires :lol, :wat
 
         def arel
           Struct.new(:to_sql).new(@lol)
@@ -114,7 +114,7 @@ describe Squirrell do
       class BadArelExample
         include Squirrell
 
-        required :lol, :wat
+        requires :lol, :wat
 
         def arel
           @lol
@@ -122,7 +122,6 @@ describe Squirrell do
       end
 
       it 'should raise error' do
-        
         expect {
           BadArelExample.find(lol: 'asdf', wat: 'tho')
         }.to raise_error Squirrell::InvalidArelError
@@ -133,7 +132,7 @@ describe Squirrell do
       class SqlExample
         include Squirrell
 
-        required :thing
+        requires :thing
 
         def raw_sql
           "SELECT * FROM #{@thing}"
