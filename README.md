@@ -144,9 +144,7 @@ HeroByName.find(name: "Finn")
 
 ## Wishlist
 
-1. Rails generators/installers/initializers
-2. Typed parameters: `requires id: :integer, name: :string`
-3. Optional parameters: `permits :email`
+1. Optional parameters: `permits :email`
 
 ## Development
 
