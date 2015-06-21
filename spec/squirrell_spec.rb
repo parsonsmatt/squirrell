@@ -59,34 +59,33 @@ describe Squirrell do
           end.to raise_error ArgumentError
         end
       end
-    end
 
-    context 'with permitted parameters' do
-      class PermittedExample
-        include Squirrell
+      describe 'permits' do
+        class PermittedExample
+          include Squirrell
 
-        requires :id
-        permits :name
+          requires :id
+          permits :name
 
-        def finder
-          @name ? @id + @name : @id
+          def finder
+            @name ? @id + @name : @id
+          end
+        end
+
+        it 'sets permitted values' do
+          expect(PermittedExample.find(id: '5', name: 'hey')).to eq('5hey')
+        end
+
+        it 'allows missing permitted values' do
+          expect(PermittedExample.find(id: 123)).to eq(123)
+        end
+
+        it 'errors on unspecified values' do
+          expect do
+            PermittedExample.find(id: 1, name: 2, face: 'wut')
+          end.to raise_error ArgumentError
         end
       end
-
-      it 'sets permitted values' do
-        expect(PermittedExample.find(id: "5", name: "hey")).to eq("5hey")
-      end
-
-      it 'allows missing permitted values' do
-        expect(PermittedExample.find(id: 123)).to eq(123)
-      end
-
-      it 'errors on unspecified values' do
-        expect do
-          PermittedExample.find(id: 1, name: 2, face: "wut")
-        end.to raise_error ArgumentError
-      end
-      
     end
 
     context 'ex has good arel' do
@@ -122,9 +121,9 @@ describe Squirrell do
       end
 
       it 'should raise error' do
-        expect {
+        expect do
           BadArelExample.find(lol: 'asdf', wat: 'tho')
-        }.to raise_error Squirrell::InvalidArelError
+        end.to raise_error Squirrell::InvalidArelError
       end
     end
 
@@ -145,7 +144,7 @@ describe Squirrell do
 
       it 'calls the executor' do
         expect(Squirrell.executor).to receive(:call).and_call_original
-        SqlExample.find(thing: "asdf")
+        SqlExample.find(thing: 'asdf')
       end
     end
   end

@@ -25,7 +25,7 @@ class ExampleQuery
   def arel
     users = User.arel_table
     users.where(users[:name].eq(@name))
-         .project(users[:email])
+      .project(users[:email])
   end
 
   # `#raw_sql` is for raw sql code. It gets executed and passed to process.

@@ -54,12 +54,10 @@ module Squirrell
       end
 
       Squirrell.permits[self.class].each do |k|
-        if args.keys.include? k
-          instance_variable_set "@#{k}", args.delete(k)
-        end
+        instance_variable_set "@#{k}", args.delete(k) if args.keys.include? k
       end
 
-      raise ArgumentError if args.any?
+      fail ArgumentError if args.any?
     end
 
     def klass.find(args = {})
