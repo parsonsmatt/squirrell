@@ -10,9 +10,19 @@ module Sqrl
 
       desc "Creates a query"
       def create_query
-        puts "Name: #{name} #{class_name} #{file_name}"
-        puts "Type: #{options[:type]}"
-        puts "Requires: #{requires}"
+        path = "app/queries/#{file_name}.rb"
+
+        template 'query_template.rb.erb', path
+      end
+
+      private
+
+      def require_syms
+        requires.map { |s| ":#{s}" } * ", "
+      end
+
+      def query_type
+        options[:type] || "finder"
       end
     end
   end
