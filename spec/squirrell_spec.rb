@@ -148,4 +148,39 @@ describe Squirrell do
       end
     end
   end
+
+  describe '#initialize' do
+    class NewExample
+      include Squirrell
+
+      requires :id, :prop
+
+      def process(result)
+        result * 2
+      end
+    end
+
+    context 'without args' do
+      it 'does not error' do
+        expect { NewExample.new }.to_not raise_error
+      end
+
+      it 'lets you test instance methods' do
+        expect(NewExample.new.process(5)).to eq(10)
+      end
+    end
+
+    context 'with args' do
+      let(:subject) { NewExample.new(id: 5, prop: 6) }
+
+      it 'also works' do
+        expect { subject }.to_not raise_error
+      end
+
+      it 'responds to params' do
+        expect(subject.id).to eq 5
+        expect(subject.prop).to eq 6
+      end
+    end
+  end
 end
