@@ -179,6 +179,56 @@ Squirrell has a generator for queries.
 * `--type=` can either be `raw_sql`, `finder`, or `arel`.
 * The remaining elements are the required parameters for the query.
 
+## Testing Squirrells
+
+Mocking Squirrels is really easy. `expect(QueryObject).to receive(:find).and_return(results)` will capture the desired behavior in calling classes.
+
+Testing Squirrells has two components: testing that the interaction with the database works as expected, and testing that the post-processing method works as expected.
+
+For basic ActiveRecord finders, it's not really necessary to test `.find`.
+ActiveRecord is well-tested and unlikely to be cause problems.
+For Arel and raw SQL queries that have a bit more complexity, you'll likely want to actually touch the database in these tests.
+
+```ruby
+describe HeroByName do
+  before :all do
+    let(:finn) { create(:hero, name: "Finn") }
+    let(:jake) { create(:hero, name: "Jake") }
+  end
+
+  it 'finds by name' do
+    result = HeroByName.find(name: "Finn")
+    expect(result).to include(finn)
+    expect(result).to_not include(jake)
+  end
+end
+```
+
+You can gain access to the underlying Squirrell with `.new`, which lets you test the `process` method and any other methods you choose to define on the class.
+
+```ruby
+describe MathQuery do
+  class MathQuery
+    include Squirrell
+
+    requires :math
+
+    def process(result)
+      result * 5
+    end
+  end
+
+  let(:subject) { MathQuery.new }
+
+  it 'multiples result by 5' do
+    expect(subject.process(5)).to eq(10)
+  end
+end
+```
+
+Generally, it'll be easiest to use and test the code if `process` is a pure function of it's input.
+If you need to refer to those values, you can pass the parameters in to `new`: `MathQuery.new(math: "so cool")`.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

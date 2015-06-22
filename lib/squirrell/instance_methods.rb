@@ -24,7 +24,8 @@ module Squirrell
       results
     end
 
-    def initialize(args)
+    def initialize(args = {})
+      return self if args.empty?
       Squirrell.requires[self.class].each do |k|
         unless args.keys.include? k
           fail MissingParameterError, "Missing required parameter: #{k}"
