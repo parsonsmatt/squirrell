@@ -173,11 +173,11 @@ Generally, this makes for more complex queries. If you're finding that you're cu
 
 Squirrell has a generator for queries.
 
-    $ rails generate sqrl:query QueryName --type=raw_sql id name
+    $ rails generate sqrl:query QueryName id name --type=raw_sql
 
 * `QueryName` is the name of the query object.
-* `--type=` can either be `raw_sql`, `finder`, or `arel`.
-* The remaining elements are the required parameters for the query.
+* `--type=` can either be `raw_sql`, `finder`, or `arel`. The default is `finder`
+* The remaining elements are the required parameters for the query. The default is `id`.
 
 ## Testing Squirrells
 
