@@ -229,6 +229,11 @@ end
 Generally, it'll be easiest to use and test the code if `process` is a pure function of it's input.
 If you need to refer to those values, you can pass the parameters in to `new`: `MathQuery.new(math: "so cool")`.
 
+## Wishlist
+
+1. Test helpers and test generators.
+2. A test hook that runs queries and caches them, similar to VCR.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
