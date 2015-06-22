@@ -38,7 +38,7 @@ describe Squirrell do
         requires :id
 
         def finder
-          @id
+          id
         end
       end
 
@@ -68,7 +68,7 @@ describe Squirrell do
           permits :name
 
           def finder
-            @name ? @id + @name : @id
+            name ? id + name : id
           end
         end
 
@@ -95,7 +95,7 @@ describe Squirrell do
         requires :lol, :wat
 
         def arel
-          Struct.new(:to_sql).new(@lol)
+          Struct.new(:to_sql).new(lol)
         end
       end
 
@@ -116,7 +116,7 @@ describe Squirrell do
         requires :lol, :wat
 
         def arel
-          @lol
+          lol
         end
       end
 
@@ -134,7 +134,7 @@ describe Squirrell do
         requires :thing
 
         def raw_sql
-          "SELECT * FROM #{@thing}"
+          "SELECT * FROM #{thing}"
         end
       end
 

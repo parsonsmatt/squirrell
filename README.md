@@ -70,7 +70,7 @@ class UserFinder
   requires :id
 
   def finder
-    User.find(@id)
+    User.find(id)
   end
 
   def process(result)
@@ -82,6 +82,7 @@ end
 The `requires :id` line indicates what parameters must be passed to `find`.
 An error will be raised if a required parameter is missing or if an extra parameter is passed.
 The symbols in the hash are made into instance variables of the same name.
+`attr_readers` are provided for them, so you can refer to them without `@`.
 
 After the finding method gets called, `#process` gets called with the result of the query.
 In the previous example, `result` would be an array, and it would convert the found users into a string wishing them a happy birthday.
@@ -98,8 +99,8 @@ class WizardByElementAndPet
 
   def arel
     wizards = Wizard.arel_table
-    wizards.where(wizards[:pet].eq(@pet))
-           .where(wizards[:element].eq(@element))
+    wizards.where(wizards[:pet].eq(pet))
+           .where(wizards[:element].eq(element))
            .project(wizards[:id])
   end
 end
@@ -117,7 +118,7 @@ class HeroByName
   requires :name
 
   def raw_sql
-    "SELECT heroes.id FROM heroes WHERE heroes.name = '#{@name}'"
+    "SELECT heroes.id FROM heroes WHERE heroes.name = '#{name}'"
   end
 end
 ```
@@ -139,7 +140,7 @@ class HeroByName
 end
 
 HeroByName.find(name: "Finn")
-# => [#<Hero:0x0987123 @name="Finn" @weapon="Grass Sword", etc...]
+# => [#<Hero:0x0987123 name="Finn" weapon="Grass Sword", etc...]
 ```
 
 Squirrell allows you to define optional permitted parameters:
@@ -156,12 +157,12 @@ def PermissionExample
 SELECT *
 FROM users
   INNER JOIN posts ON users.id = posts.user_id
-WHERE users.id = #{@user_id} #{has_post?}
+WHERE users.id = #{user_id} #{has_post?}
 SQL
   end
 
   def has_post?
-    @post_id ? "AND posts.id = #{@post_id}" : ""
+    post_id ? "AND posts.id = #{post_id}" : ""
   end
 end
 ```
