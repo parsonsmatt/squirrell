@@ -207,21 +207,21 @@ end
 You can gain access to the underlying Squirrell with `.new`, which lets you test the `process` method and any other methods you choose to define on the class.
 
 ```ruby
-describe MathQuery do
-  class MathQuery
-    include Squirrell
+class MathQuery
+  include Squirrell
 
-    requires :math
+  requires :math
 
-    def process(result)
-      result * 5
-    end
+  def process(result)
+    result * 5
   end
+end
 
+describe MathQuery do
   let(:subject) { MathQuery.new }
 
   it 'multiples result by 5' do
-    expect(subject.process(5)).to eq(10)
+    expect(subject.process(5)).to eq(25)
   end
 end
 ```
