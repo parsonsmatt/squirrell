@@ -146,7 +146,7 @@ HeroByName.find(name: "Finn")
 Squirrell allows you to define optional permitted parameters:
 
 ```ruby
-def PermissionExample
+class PermissionExample
   include Squirrell
 
   requires :user_id
